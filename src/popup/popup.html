@@ -3,15 +3,55 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Azan</title>
+    <title>Everyday Muslim</title>
     <link rel="stylesheet" href="popup.css" />
   </head>
   <body>
-    <main class="card">
-      <h1>Azan</h1>
-      <p id="status">Ready</p>
-      <button id="load-prayer-times" type="button">Load Prayer Times</button>
-      <ul id="times" class="times"></ul>
+    <main class="app">
+      <header class="hero">
+        <div class="mosque" aria-hidden="true">
+          <svg viewBox="0 0 220 92" role="img">
+            <path
+              d="M18 77h16V40c0-7 6-13 13-13s13 6 13 13v37h8V50c0-8 6-14 14-14s14 6 14 14v27h6V45c0-9 7-16 16-16s16 7 16 16v32h6V50c0-8 6-14 14-14s14 6 14 14v27h8V40c0-7 6-13 13-13s13 6 13 13v37h16v9H18z"
+            />
+            <path d="M33 34h8V6h-8zm146 0h8V6h-8z" />
+            <path d="M37 9h0m-5 0h18M183 9h18m-13 4h8M37 13h8" />
+            <circle cx="110" cy="27" r="15" />
+          </svg>
+        </div>
+        <h1>Everyday Muslim</h1>
+      </header>
+
+      <section class="sky" aria-hidden="true">
+        <div class="moon"></div>
+      </section>
+
+      <section class="times-grid" aria-live="polite">
+        <article class="prayer">
+          <p class="name">Fajr</p>
+          <p class="time" data-prayer="Fajr">--:--</p>
+        </article>
+        <article class="prayer">
+          <p class="name">Dhuhr</p>
+          <p class="time" data-prayer="Dhuhr">--:--</p>
+        </article>
+        <article class="prayer">
+          <p class="name">Asr</p>
+          <p class="time" data-prayer="Asr">--:--</p>
+        </article>
+        <article class="prayer">
+          <p class="name">Maghrib</p>
+          <p class="time" data-prayer="Maghrib">--:--</p>
+        </article>
+        <article class="prayer">
+          <p class="name">Isha</p>
+          <p class="time" data-prayer="Isha">--:--</p>
+        </article>
+      </section>
+
+      <footer class="meta">
+        <p id="status">Loading prayer times...</p>
+      </footer>
     </main>
     <script type="module" src="popup.js"></script>
   </body>

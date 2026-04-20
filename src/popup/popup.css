@@ -1,41 +1,140 @@
 :root {
-  color-scheme: light;
-  font-family: Arial, sans-serif;
+  color-scheme: dark;
+  --bg: #003b47;
+  --text: #f4efea;
+  --subtle: #d6d9dc;
+  --shadow: #072c34;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  min-width: 320px;
-  background: #f5f7f9;
-  color: #111827;
+  min-width: 350px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Avenir Next", "Segoe UI", sans-serif;
 }
 
-.card {
-  padding: 16px;
+.app {
+  min-height: 396px;
+  display: grid;
+  grid-template-rows: auto 1fr auto auto;
+  background: radial-gradient(circle at 78% 48%, #2d6b76 0%, var(--bg) 50%);
+}
+
+.hero {
+  padding: 28px 18px 10px;
+  text-align: center;
+}
+
+.mosque {
+  width: 126px;
+  margin: 0 auto 16px;
+}
+
+.mosque svg {
+  width: 100%;
+  fill: #efe3d5;
 }
 
 h1 {
-  margin: 0 0 8px;
-  font-size: 20px;
+  margin: 0;
+  font-size: 42px;
+  font-weight: 650;
+  letter-spacing: 0.2px;
+  line-height: 1.05;
+}
+
+.sky {
+  position: relative;
+  margin: 4px 14px 0;
+  border-radius: 14px;
+  min-height: 126px;
+  overflow: hidden;
+}
+
+.sky::before,
+.sky::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-repeat: no-repeat;
+}
+
+.sky::before {
+  background-image:
+    radial-gradient(circle, #cde7f3 1.2px, transparent 1.8px),
+    radial-gradient(circle, #cde7f3 1px, transparent 1.6px),
+    radial-gradient(circle, #cde7f3 1.5px, transparent 2px),
+    radial-gradient(circle, #cde7f3 1px, transparent 1.5px),
+    radial-gradient(circle, #cde7f3 1.2px, transparent 1.8px),
+    radial-gradient(circle, #cde7f3 1px, transparent 1.7px),
+    radial-gradient(circle, #cde7f3 1.2px, transparent 1.9px),
+    radial-gradient(circle, #cde7f3 1px, transparent 1.6px);
+  background-size: 200px 120px;
+  background-position:
+    10% 72%,
+    20% 62%,
+    34% 85%,
+    50% 67%,
+    63% 76%,
+    76% 61%,
+    86% 81%,
+    93% 70%;
+  opacity: 0.85;
+}
+
+.sky::after {
+  background-image: linear-gradient(to top, rgba(0, 0, 0, 0.1), transparent 30%);
+}
+
+.moon {
+  position: absolute;
+  right: 24px;
+  bottom: 22px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #f1f3f5;
+  box-shadow: -4px 0 0 #dbe4ea, 0 0 10px rgba(241, 243, 245, 0.65);
+}
+
+.times-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 4px;
+  text-align: center;
+  padding: 0 8px 4px;
+}
+
+.prayer {
+  min-width: 0;
+}
+
+.name {
+  margin: 0;
+  color: #f3f5f6;
+  font-size: 26px;
+  letter-spacing: 0.2px;
+}
+
+.time {
+  margin: 10px 0 0;
+  color: var(--subtle);
+  font-size: 24px;
+  white-space: nowrap;
+}
+
+.meta {
+  text-align: center;
+  padding: 6px 8px 12px;
 }
 
 #status {
-  margin: 0 0 12px;
-  font-size: 13px;
-}
-
-button {
-  width: 100%;
-  border: 0;
-  border-radius: 8px;
-  padding: 10px;
-  background: #0d9488;
-  color: white;
-  cursor: pointer;
-}
-
-.times {
-  margin: 12px 0 0;
-  padding-left: 16px;
-  font-size: 13px;
+  margin: 0;
+  font-size: 12px;
+  opacity: 0.78;
 }
