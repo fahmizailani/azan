@@ -1,15 +1,19 @@
 const statusEl = document.querySelector('#status');
-const timeEls = document.querySelectorAll('.time[data-prayer]');
+const buttonEl = document.querySelector('#load-prayer-times');
+const timesEl = document.querySelector('#times');
 
-function cleanTime(value) {
-  if (!value) return '--:--';
-  return value.split(' ')[0].trim();
-}
+const PRAYER_ORDER = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
 
 function renderTimes(timings) {
-  timeEls.forEach((el) => {
-    const prayerName = el.dataset.prayer;
-    el.textContent = cleanTime(timings[prayerName]);
+  timesEl.innerHTML = '';
+
+  PRAYER_ORDER.forEach((name) => {
+    const value = timings[name];
+    if (!value) return;
+
+    const li = document.createElement('li');
+    li.textContent = `${name}: ${value}`;
+    timesEl.appendChild(li);
   });
 }
 
@@ -50,7 +54,7 @@ async function loadPrayerTimes() {
     }
 
     renderTimes(timings);
-    statusEl.textContent = `Updated ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+    statusEl.textContent = 'Prayer times loaded.';
 
     chrome.runtime.sendMessage({
       type: 'PRAYER_TIMES_UPDATED',
@@ -65,4 +69,6 @@ async function loadPrayerTimes() {
   }
 }
 
-loadPrayerTimes();
+buttonEl.addEventListener('click', () => {
+  loadPrayerTimes();
+});
