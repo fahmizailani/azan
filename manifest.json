@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "Azan",
+  "description": "Azan prayer time helper for Chrome.",
+  "version": "0.1.0",
+  "action": {
+    "default_title": "Azan",
+    "default_popup": "src/popup/popup.html"
+  },
+  "background": {
+    "service_worker": "src/background/background.js",
+    "type": "module"
+  },
+  "options_page": "src/options/options.html",
+  "permissions": [
+    "storage",
+    "alarms",
+    "notifications"
+  ],
+  "host_permissions": [
+    "https://api.aladhan.com/*"
+  ]
+}
