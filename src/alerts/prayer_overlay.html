@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prayer Overlay</title>
+    <link rel="stylesheet" href="./prayer_overlay.css" />
+  </head>
+  <body>
+    <main class="overlay-shell">
+      <section class="overlay-card">
+        <div class="overlay-icon-wrap"><span class="overlay-icon"></span></div>
+        <h1 id="overlay-title" class="overlay-title">Maghrib has begun</h1>
+        <p id="overlay-time" class="overlay-time">6:52 PM</p>
+        <div class="overlay-actions">
+          <button id="overlay-snooze" class="overlay-btn ghost" type="button">Snooze</button>
+          <button id="overlay-dismiss" class="overlay-btn solid" type="button">Dismiss</button>
+        </div>
+      </section>
+    </main>
+    <script type="module" src="./prayer_overlay.js"></script>
+  </body>
+</html>

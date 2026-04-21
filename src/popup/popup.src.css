@@ -36,43 +36,73 @@
     box-sizing: border-box;
   }
 
+  html,
   body {
-    @apply m-0 min-w-[320px] bg-slate-100 text-slate-900;
+    width: 320px;
+    overflow: hidden;
+  }
+
+  body {
+    @apply m-0 bg-[#f5f5f3] text-slate-900;
     font-family: "Iowan Old Style", serif;
+  }
+
+  button {
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
   }
 }
 
 @layer components {
   .app {
-    @apply p-2.5;
+    @apply p-0;
+    width: 320px;
   }
 
   .topbar {
-    @apply mb-2 grid grid-cols-[34px_1fr_34px] items-center gap-2;
-  }
-
-  .topbar-spacer {
-    @apply h-[34px] w-[34px];
+    @apply relative mb-0 bg-[#d0ffe9] px-4 pt-4;
+    min-height: 100px;
   }
 
   .icon-btn {
-    @apply inline-flex h-[34px] w-[34px] cursor-pointer items-center justify-center rounded-[10px] border border-slate-300 bg-white p-0 text-base;
+    @apply inline-flex h-[34px] w-[34px] cursor-pointer items-center justify-center rounded-[10px] border-0 bg-transparent p-0 text-[#5d6670];
+  }
+
+  .topbar .icon-btn {
+    @apply absolute right-4 top-4;
+  }
+
+  .header-copy {
+    @apply pt-1;
+  }
+
+  .date-line {
+    @apply m-0 text-[14px] leading-[1.2] text-[#4a5565];
+  }
+
+  .date-hijri {
+    @apply mb-1;
+  }
+
+  .location-line {
+    @apply mt-1 text-[11px] text-[#6f7d84];
   }
 
   .page {
     @apply block;
+    height: 100%;
+    overflow-y: auto;
+  }
+
+  #settings-page {
+    @apply overflow-hidden;
+  }
+
+  #settings-page:not([hidden]) {
+    @apply flex flex-col;
   }
 
   .page[hidden] {
     @apply hidden;
-  }
-
-  h1 {
-    @apply m-0 mb-2 mr-0 text-center text-[22px];
-  }
-
-  .topbar h1 {
-    @apply mb-0;
   }
 
   #refresh-prayer-times,
@@ -80,78 +110,193 @@
     @apply w-full cursor-pointer rounded-lg border-0 bg-teal-600 px-2 py-2.5 text-white;
   }
 
-  .dashboard-dates {
-    @apply mb-2;
-  }
-
-  .date-line {
-    @apply m-0 text-xs text-slate-700;
-  }
-
-  .date-hijri {
-    @apply mt-0.5 text-slate-600;
-  }
-
-  .prayer-strip {
-    @apply mt-2 grid grid-cols-5 gap-1 rounded-xl bg-cyan-950 px-1.5 py-2.5;
-  }
-
-  .prayer-item {
-    @apply min-w-0 rounded-[10px] py-0.5 text-center;
-  }
-
-  .prayer-item.is-active {
-    background: rgba(255, 255, 255, 0.08);
-  }
-
-  .prayer-name {
-    @apply m-0 text-xs text-slate-200;
-  }
-
-  .prayer-time {
-    @apply mt-1.5 whitespace-nowrap text-[13px] font-semibold text-slate-100;
-  }
-
-  .prayer-dot {
-    @apply mt-1.5 inline-block h-[7px] w-[7px] rounded-full bg-slate-400;
-  }
-
-  .prayer-dot.is-active {
-    @apply bg-amber-300;
-    box-shadow: 0 0 0 2px rgba(244, 201, 93, 0.28);
-  }
-
   .quran-quote {
-    @apply mt-3 rounded-[10px] border border-[#e3dcdc] bg-[#f7f2f1] p-4 text-center;
+    @apply mt-3 px-4 text-center;
+    min-height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 
   .quran-arabic {
-    @apply m-0 text-center text-2xl leading-[1.45] text-slate-900;
+    @apply m-0 text-center text-[27px] leading-[1.2] text-[#59a88f];
     font-family: "Athelas Arabic", serif;
   }
 
   .quran-pronunciation {
-    @apply mt-1 text-center text-[15px] italic leading-[1.4] text-slate-900;
+    @apply mt-0.5 text-center text-[12px] leading-[1.2] text-[#59a88f];
   }
 
   .quran-meaning {
-    @apply mt-0.5 text-center text-[15px] leading-[1.2] text-slate-900;
+    @apply mt-0.5 text-center text-[12px] leading-[1.2] text-[#59a88f];
   }
 
   .quran-reference {
-    @apply mt-[7px] text-center text-xs text-slate-800;
+    @apply mt-0.5 text-center text-[12px] leading-[1.2] text-[#59a88f];
+  }
+
+  .prayer-list {
+    @apply mt-0 border-y border-[#d4d4d4];
+  }
+
+  .prayer-item {
+    @apply grid grid-cols-[1fr_auto] items-center border-b border-[#d4d4d4] px-4 py-3;
+  }
+
+  .prayer-item:last-child {
+    @apply border-b-0;
+  }
+
+  .prayer-left {
+    @apply flex items-center gap-2;
+    color: #9b9b9b;
+  }
+
+  .prayer-icon {
+    @apply h-4 w-4 shrink-0;
+    background-color: currentColor;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    -webkit-mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: contain;
+  }
+
+  .prayer-icon-fajr {
+    -webkit-mask-image: url("../../assets/icons/sunrise_fajr.svg");
+    mask-image: url("../../assets/icons/sunrise_fajr.svg");
+  }
+
+  .prayer-icon-dhuhr {
+    -webkit-mask-image: url("../../assets/icons/sun_dhuhr.svg");
+    mask-image: url("../../assets/icons/sun_dhuhr.svg");
+  }
+
+  .prayer-icon-asr {
+    -webkit-mask-image: url("../../assets/icons/sun dim-asr.svg");
+    mask-image: url("../../assets/icons/sun dim-asr.svg");
+  }
+
+  .prayer-icon-maghrib {
+    -webkit-mask-image: url("../../assets/icons/sunset_maghrib.svg");
+    mask-image: url("../../assets/icons/sunset_maghrib.svg");
+  }
+
+  .prayer-icon-isha {
+    -webkit-mask-image: url("../../assets/icons/moon_isha.svg");
+    mask-image: url("../../assets/icons/moon_isha.svg");
+  }
+
+  .prayer-name {
+    @apply m-0 text-[18px] leading-none;
+    color: inherit;
+  }
+
+  .prayer-time {
+    @apply m-0 whitespace-nowrap text-[16px] leading-none text-[#9b9b9b];
+  }
+
+  .prayer-countdown {
+    @apply col-start-1 m-0 mt-1 text-left text-[11px] text-[#9f9f9f];
+    padding-left: 24px;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
+  }
+
+  .prayer-dot {
+    @apply hidden;
+  }
+
+  .prayer-item.is-active {
+    @apply pt-6 pb-[45px];
+    position: relative;
+  }
+
+  .prayer-item.is-active::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, #83d4ab 0%, #196255 100%);
+  }
+
+  .prayer-item.is-active .prayer-name {
+    @apply text-[30px];
+    font-weight: 700;
+  }
+
+  .prayer-item.is-active .prayer-left {
+    color: #196255;
+  }
+
+  .prayer-item.is-active .prayer-icon {
+    @apply h-[18px] w-[18px];
+  }
+
+  .prayer-item.is-active .prayer-time {
+    @apply text-[25px] text-[#196255];
+  }
+
+  .prayer-item.is-active .prayer-countdown {
+    @apply text-[#9f9f9f];
   }
 
   .settings-head {
-    @apply mb-2 flex items-center gap-2;
+    @apply sticky top-0 z-10 mb-0 flex items-center gap-2 bg-[#f5f5f3] px-4 pt-4;
   }
 
   .settings-head h2 {
-    @apply m-0 text-lg;
+    @apply m-0 text-[14px] text-[#4a5565];
+  }
+
+  .settings-body {
+    @apply border-t border-[#d9d9d9] px-4 pb-4 pt-3;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+  }
+
+  .settings-tabs {
+    @apply mb-3 grid grid-cols-3 gap-0 rounded-[10px] border border-[#e2e2e2] bg-[#f1f1f1] p-0.5;
+  }
+
+  .settings-tab {
+    @apply h-8 rounded-[8px] border-0 bg-transparent text-[12px] text-[#8b8b8b];
+  }
+
+  .settings-tab.is-active {
+    @apply bg-[#196255] text-[#9ef4cb];
+    font-weight: 600;
+  }
+
+  .settings-panel {
+    @apply block;
+  }
+
+  .settings-panel[hidden] {
+    @apply hidden;
+  }
+
+  .settings-block {
+    @apply mb-3;
+  }
+
+  .settings-block-split {
+    @apply border-b border-[#d9d9d9] pb-3;
+  }
+
+  .settings-label {
+    @apply mb-1 block text-[14px] text-[#4a5565];
+  }
+
+  .settings-sub {
+    @apply mt-0 text-[12px] text-[#9f9f9f];
   }
 
   .location-map {
-    @apply mb-2.5 h-[180px] w-full overflow-hidden rounded-[10px] border border-slate-300;
+    @apply mb-2.5 h-[140px] w-full overflow-hidden rounded-[10px] border border-slate-300;
   }
 
   .location-map .maplibregl-ctrl-logo,
@@ -159,20 +304,9 @@
     @apply hidden !important;
   }
 
-  .manual-location {
-    @apply rounded-[10px] border border-slate-300 bg-white p-3;
-  }
-
-  .manual-location h2 {
-    @apply mb-2 mt-0 text-sm;
-  }
-
-  .manual-location label {
-    @apply mb-1 mt-2 block text-xs text-slate-700;
-  }
-
-  .manual-location input {
+  #location {
     @apply w-full rounded-lg border border-slate-300 px-2.5 py-2 text-[13px];
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
   }
 
   .suggestions {
@@ -192,16 +326,59 @@
   }
 
   #load-prayer-times {
-    @apply mt-2 bg-cyan-800;
+    @apply mt-2 bg-[#9ef4cb] text-[#196255];
   }
 
-  .divider {
-    @apply my-2.5 border-0 border-t border-slate-200;
+  .segmented-row {
+    @apply grid grid-cols-4 gap-2;
   }
 
-  .sound-format,
-  .time-format {
-    @apply grid gap-2;
+  .time-format-row {
+    @apply grid-cols-2;
+  }
+
+  .chip-btn {
+    @apply h-9 rounded-[10px] border border-[#d9d9d9] bg-white text-[12px] text-[#9f9f9f];
+  }
+
+  .chip-btn.is-active {
+    @apply border-[#9ef4cb] bg-[#9ef4cb] text-[#007a55];
+    font-weight: 600;
+  }
+
+  .chip-btn:disabled,
+  .secondary-btn:disabled,
+  .preview-btn:disabled,
+  .sound-select:disabled {
+    @apply cursor-not-allowed opacity-50;
+  }
+
+  .dnd-toggle.is-disabled {
+    @apply cursor-not-allowed opacity-50;
+  }
+
+  .secondary-btn {
+    @apply mt-2 h-9 w-full rounded-[10px] border border-[#d9d9d9] bg-white text-[12px] text-[#4a5565];
+  }
+
+  .dnd-block {
+    @apply flex items-center justify-between;
+  }
+
+  .dnd-toggle {
+    @apply relative h-6 w-11 rounded-full bg-[#d9d9d9] transition-colors;
+  }
+
+  .dnd-knob {
+    @apply absolute left-[2px] top-[2px] h-5 w-5 rounded-full bg-white transition-transform;
+  }
+
+  .dnd-toggle.is-active {
+    @apply bg-[#196255];
+  }
+
+  .dnd-toggle.is-active .dnd-knob {
+    transform: translateX(20px);
   }
 
   .sound-option-row {
@@ -220,36 +397,9 @@
     @apply bg-slate-50;
   }
 
-  .time-toggle-row {
-    @apply flex items-center gap-2.5 text-[13px];
-  }
-
-  .switch {
-    @apply relative inline-block h-[26px] w-[46px];
-  }
-
-  .switch input {
-    @apply h-0 w-0 opacity-0;
-  }
-
-  .slider {
-    @apply absolute inset-0 cursor-pointer rounded-full bg-slate-300 transition-colors;
-  }
-
-  .slider::before {
-    content: "";
-    @apply absolute left-[3px] top-[3px] h-5 w-5 rounded-full bg-white transition-transform;
-  }
-
-  .switch input:checked + .slider {
-    @apply bg-teal-600;
-  }
-
-  .switch input:checked + .slider::before {
-    transform: translateX(20px);
-  }
-
-  .helper {
-    @apply mt-2 text-xs text-slate-500;
+  .time-format,
+  .divider,
+  .manual-location {
+    @apply hidden;
   }
 }

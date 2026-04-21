@@ -11,6 +11,14 @@
     "service_worker": "src/background/background.js",
     "type": "module"
   },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["src/content/toast_inject.js"],
+      "css": ["src/content/toast_inject.css"],
+      "run_at": "document_idle"
+    }
+  ],
   "options_page": "src/options/options.html",
   "permissions": [
     "storage",

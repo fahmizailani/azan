@@ -4,18 +4,35 @@ const locationSuggestionsEl = document.querySelector('#location-suggestions');
 const prayerTimeEls = document.querySelectorAll('.prayer-time[data-prayer-time]');
 const prayerItemEls = document.querySelectorAll('.prayer-item[data-prayer-item]');
 const prayerDotEls = document.querySelectorAll('.prayer-dot[data-prayer-dot]');
+const prayerCountdownEls = document.querySelectorAll('.prayer-countdown[data-prayer-countdown]');
 const mapEl = document.querySelector('#location-map');
 const mainTopbarEl = document.querySelector('#main-topbar');
 const openSettingsEl = document.querySelector('#open-settings');
 const backDashboardEl = document.querySelector('#back-dashboard');
 const dashboardPageEl = document.querySelector('#dashboard-page');
 const settingsPageEl = document.querySelector('#settings-page');
-const timeFormatToggleEl = document.querySelector('#time-format-toggle');
-const timeFormatValueEl = document.querySelector('#time-format-value');
+const settingsTabLocationEl = document.querySelector('#settings-tab-location');
+const settingsTabNotificationEl = document.querySelector('#settings-tab-notification');
+const settingsTabFormatsEl = document.querySelector('#settings-tab-formats');
+const settingsPanelLocationEl = document.querySelector('#settings-panel-location');
+const settingsPanelNotificationEl = document.querySelector('#settings-panel-notification');
+const settingsPanelFormatsEl = document.querySelector('#settings-panel-formats');
+const timeFormat12El = document.querySelector('#time-format-12hr');
+const timeFormat24El = document.querySelector('#time-format-24hr');
+const alertMinNoneEl = document.querySelector('#alert-min-none');
+const alertMin5El = document.querySelector('#alert-min-5');
+const alertMin10El = document.querySelector('#alert-min-10');
+const alertMin15El = document.querySelector('#alert-min-15');
+const dndToggleEl = document.querySelector('#dnd-toggle');
+const overlayToggleEl = document.querySelector('#overlay-toggle');
+const fridayModeToggleEl = document.querySelector('#friday-mode-toggle');
+const testPrePrayerToastEl = document.querySelector('#test-pre-prayer-toast');
+const testPrayerOverlayEl = document.querySelector('#test-prayer-overlay');
 const soundSelectEl = document.querySelector('#notification-sound-select');
 const previewSelectedSoundEl = document.querySelector('#preview-selected-sound');
 const gregorianDateTimeEl = document.querySelector('#gregorian-datetime');
 const hijriDateEl = document.querySelector('#hijri-date');
+const dashboardLocationEl = document.querySelector('#dashboard-location');
 const quranArabicEl = document.querySelector('#quran-arabic');
 const quranPronunciationEl = document.querySelector('#quran-pronunciation');
 const quranMeaningEl = document.querySelector('#quran-meaning');
@@ -30,7 +47,10 @@ const FALLBACK_LOCATION_LABEL = 'Singapore, Singapore';
 const DEFAULT_SETTINGS = {
   calculationMethod: 2,
   notifications: true,
-  notificationSound: 'sound1'
+  notificationSound: 'sound1',
+  alertBeforeMinutes: 15,
+  overlayEnabled: true,
+  fridayModeEnabled: true
 };
 const DAILY_QURAN_QUOTES = [
   {
@@ -94,6 +114,29 @@ let lastKnownLocationCache = '';
 let dashboardTimeZoneCache = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
 let dailyQuoteKeyCache = '';
 
+function setSettingsTab(tabName) {
+  const isLocation = tabName === 'location';
+  const isNotification = tabName === 'notification';
+  const isFormats = tabName === 'formats';
+
+  if (settingsTabLocationEl) {
+    settingsTabLocationEl.classList.toggle('is-active', isLocation);
+    settingsTabLocationEl.setAttribute('aria-selected', String(isLocation));
+  }
+  if (settingsTabNotificationEl) {
+    settingsTabNotificationEl.classList.toggle('is-active', isNotification);
+    settingsTabNotificationEl.setAttribute('aria-selected', String(isNotification));
+  }
+  if (settingsTabFormatsEl) {
+    settingsTabFormatsEl.classList.toggle('is-active', isFormats);
+    settingsTabFormatsEl.setAttribute('aria-selected', String(isFormats));
+  }
+
+  if (settingsPanelLocationEl) settingsPanelLocationEl.hidden = !isLocation;
+  if (settingsPanelNotificationEl) settingsPanelNotificationEl.hidden = !isNotification;
+  if (settingsPanelFormatsEl) settingsPanelFormatsEl.hidden = !isFormats;
+}
+
 function setCurrentLocationButtonLabel(label) {
   currentLocationButtonEl.textContent = label || DEFAULT_CURRENT_LOCATION_LABEL;
 }
@@ -115,6 +158,10 @@ function setLocationInput(label) {
     lastKnownLocationCache = text;
     locationInputEl.value = text;
     setLocationPlaceholder(text);
+    if (dashboardLocationEl) {
+      dashboardLocationEl.textContent = text;
+      dashboardLocationEl.hidden = false;
+    }
     chrome.storage.local.set({ manualLocation: text });
   }
 }
@@ -148,11 +195,14 @@ function renderTimes(timings) {
 
   const activePrayerName = getActivePrayerName(timings);
   prayerItemEls.forEach((el) => {
-    el.classList.toggle('is-active', el.dataset.prayerItem === activePrayerName);
+    const isActive = el.dataset.prayerItem === activePrayerName;
+    el.classList.toggle('is-active', isActive);
   });
   prayerDotEls.forEach((el) => {
     el.classList.toggle('is-active', el.dataset.prayerDot === activePrayerName);
   });
+
+  updatePrayerCountdown();
 }
 
 function parseRawTime(raw) {
@@ -207,6 +257,75 @@ function getActivePrayerName(timings) {
 
   if (activeName) return activeName;
   return PRAYER_ORDER[PRAYER_ORDER.length - 1];
+}
+
+function getPrayerProgress(timings) {
+  const now = new Date();
+  const nowParts = new Intl.DateTimeFormat('en-GB', {
+    timeZone: dashboardTimeZoneCache,
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false
+  }).formatToParts(now);
+
+  const hour = Number(nowParts.find((part) => part.type === 'hour')?.value || 0);
+  const minute = Number(nowParts.find((part) => part.type === 'minute')?.value || 0);
+  const second = Number(nowParts.find((part) => part.type === 'second')?.value || 0);
+  const nowSeconds = hour * 3600 + minute * 60 + second;
+
+  const prayerSeconds = PRAYER_ORDER.map((name) => {
+    const parsed = parseRawTime(timings[name]);
+    if (!parsed) return { name, seconds: null };
+    return { name, seconds: parsed.hour * 3600 + parsed.minute * 60 };
+  }).filter((entry) => Number.isFinite(entry.seconds));
+
+  if (!prayerSeconds.length) return null;
+
+  let activeName = prayerSeconds[prayerSeconds.length - 1].name;
+  for (const entry of prayerSeconds) {
+    if (entry.seconds <= nowSeconds) {
+      activeName = entry.name;
+    }
+  }
+
+  let nextEntry = prayerSeconds.find((entry) => entry.seconds > nowSeconds);
+  let secondsToNext = 0;
+  if (nextEntry) {
+    secondsToNext = nextEntry.seconds - nowSeconds;
+  } else {
+    nextEntry = prayerSeconds[0];
+    secondsToNext = (24 * 3600 - nowSeconds) + nextEntry.seconds;
+  }
+
+  return {
+    activeName,
+    nextName: nextEntry.name,
+    secondsToNext
+  };
+}
+
+function formatCountdown(totalSeconds) {
+  const safe = Math.max(0, Number(totalSeconds) || 0);
+  const hours = Math.floor(safe / 3600);
+  const minutes = Math.floor((safe % 3600) / 60);
+  const seconds = Math.floor(safe % 60);
+  return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+}
+
+function updatePrayerCountdown() {
+  if (!currentTimingsCache) return;
+
+  const progress = getPrayerProgress(currentTimingsCache);
+  if (!progress) return;
+
+  prayerCountdownEls.forEach((el) => {
+    const isActive = el.dataset.prayerCountdown === progress.activeName;
+    el.hidden = !isActive;
+    if (!isActive) return;
+
+    el.textContent = `${progress.nextName} in ${formatCountdown(progress.secondsToNext)}`;
+  });
 }
 
 function getDateParam() {
@@ -629,8 +748,12 @@ async function announceLoaded(timings, locationLabel, sourcePayload) {
 }
 
 function applyTimeFormatSelection() {
-  timeFormatToggleEl.checked = timeFormatCache === '24h';
-  timeFormatValueEl.textContent = `Current: ${timeFormatCache === '24h' ? '24 Hour' : '12 Hour'}`;
+  if (timeFormat12El) {
+    timeFormat12El.classList.toggle('is-active', timeFormatCache !== '24h');
+  }
+  if (timeFormat24El) {
+    timeFormat24El.classList.toggle('is-active', timeFormatCache === '24h');
+  }
 }
 
 async function setTimeFormat(format) {
@@ -644,27 +767,109 @@ async function setTimeFormat(format) {
 }
 
 function applySoundSelection(soundKey) {
-  const target = soundKey === 'sound2' ? 'sound2' : 'sound1';
-  soundSelectEl.value = target;
+  const target = ['none', 'sound1', 'sound2'].includes(soundKey) ? soundKey : 'sound1';
+  if (soundSelectEl) {
+    soundSelectEl.value = target;
+  }
 }
 
 async function setNotificationSound(soundKey) {
-  const target = soundKey === 'sound2' ? 'sound2' : 'sound1';
+  const target = ['none', 'sound1', 'sound2'].includes(soundKey) ? soundKey : 'sound1';
   applySoundSelection(target);
   await updateSettings({ notificationSound: target });
 }
 
+function applyAlertBeforeSelection(minutes) {
+  const value = [0, 5, 10, 15].includes(Number(minutes)) ? Number(minutes) : 15;
+  if (alertMinNoneEl) alertMinNoneEl.classList.toggle('is-active', value === 0);
+  if (alertMin5El) alertMin5El.classList.toggle('is-active', value === 5);
+  if (alertMin10El) alertMin10El.classList.toggle('is-active', value === 10);
+  if (alertMin15El) alertMin15El.classList.toggle('is-active', value === 15);
+}
+
+async function setAlertBeforeMinutes(minutes) {
+  const value = [0, 5, 10, 15].includes(Number(minutes)) ? Number(minutes) : 15;
+  applyAlertBeforeSelection(value);
+  await updateSettings({ alertBeforeMinutes: value });
+  chrome.runtime.sendMessage({ type: 'SETTINGS_UPDATED' });
+}
+
+function applyOverlaySelection(enabled) {
+  if (!overlayToggleEl) return;
+  overlayToggleEl.classList.toggle('is-active', Boolean(enabled));
+}
+
+function applyFridayModeSelection(enabled) {
+  if (!fridayModeToggleEl) return;
+  fridayModeToggleEl.classList.toggle('is-active', Boolean(enabled));
+}
+
+function applyDndSelection(enabled) {
+  if (!dndToggleEl) return;
+  dndToggleEl.classList.toggle('is-active', Boolean(enabled));
+}
+
+function applyNotificationControlsState(isDndEnabled) {
+  const disabled = Boolean(isDndEnabled);
+  const controls = [
+    alertMinNoneEl,
+    alertMin5El,
+    alertMin10El,
+    alertMin15El,
+    overlayToggleEl,
+    fridayModeToggleEl,
+    testPrePrayerToastEl,
+    testPrayerOverlayEl,
+    soundSelectEl,
+    previewSelectedSoundEl
+  ];
+
+  controls.forEach((el) => {
+    if (!el) return;
+    if ('disabled' in el) {
+      el.disabled = disabled;
+    }
+    el.classList.toggle('is-disabled', disabled);
+  });
+}
+
+async function setDoNotDisturb(enabled) {
+  const isEnabled = Boolean(enabled);
+  applyDndSelection(isEnabled);
+  applyNotificationControlsState(isEnabled);
+  await updateSettings({ notifications: !isEnabled });
+  chrome.runtime.sendMessage({ type: 'SETTINGS_UPDATED' });
+}
+
+async function setOverlayEnabled(enabled) {
+  const isEnabled = Boolean(enabled);
+  applyOverlaySelection(isEnabled);
+  await updateSettings({ overlayEnabled: isEnabled });
+  chrome.runtime.sendMessage({ type: 'SETTINGS_UPDATED' });
+}
+
+async function setFridayModeEnabled(enabled) {
+  const isEnabled = Boolean(enabled);
+  applyFridayModeSelection(isEnabled);
+  await updateSettings({ fridayModeEnabled: isEnabled });
+  chrome.runtime.sendMessage({ type: 'SETTINGS_UPDATED' });
+}
+
 function getSoundAssetPath(soundKey) {
+  if (soundKey === 'none') return '';
   return soundKey === 'sound2' ? '../../assets/sound-2.wav' : '../../assets/sound-1.wav';
 }
 
 function previewNotificationSound(soundKey) {
+  if (soundKey === 'none') return;
   if (previewAudioEl) {
     previewAudioEl.pause();
     previewAudioEl.currentTime = 0;
   }
 
-  previewAudioEl = new Audio(getSoundAssetPath(soundKey));
+  const src = getSoundAssetPath(soundKey);
+  if (!src) return;
+  previewAudioEl = new Audio(src);
   previewAudioEl.play().catch(() => {
     // Ignore playback errors in popup context.
   });
@@ -721,25 +926,23 @@ function updateDailyQuranQuote() {
 function updateDashboardDateTime() {
   const now = new Date();
 
-  gregorianDateTimeEl.textContent = now.toLocaleString([], {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    timeZone: dashboardTimeZoneCache
-  });
-
   hijriDateEl.textContent = new Intl.DateTimeFormat('en-u-ca-islamic', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
     day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    timeZone: dashboardTimeZoneCache
+  }).format(now);
+
+  gregorianDateTimeEl.textContent = new Intl.DateTimeFormat('en-US', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
     timeZone: dashboardTimeZoneCache
   }).format(now);
 
   updateDailyQuranQuote();
+  updatePrayerCountdown();
 }
 
 function startDashboardClock() {
@@ -755,8 +958,10 @@ async function loadPrayerTimesByCoordinates() {
   try {
     const position = await getCurrentPosition();
     const { latitude, longitude } = position.coords;
+    const liveCoords = { latitude, longitude };
     let resolvedLocationName = '';
     setCurrentLocationButtonLabel('Resolving location...');
+    setMapLocation(latitude, longitude);
 
     try {
       const cityLabel = await fetchCityNameFromCoordinates(latitude, longitude);
@@ -776,18 +981,25 @@ async function loadPrayerTimesByCoordinates() {
       `?latitude=${latitude}&longitude=${longitude}&method=${CALC_METHOD}`;
     const prayerData = await fetchTimings(endpoint);
     const timings = prayerData.timings;
-    const coords = prayerData.coords || { latitude, longitude };
+    const coords = prayerData.coords || liveCoords;
     setMapLocation(coords.latitude, coords.longitude);
     const resolvedFromFinalCoords = await fetchCityNameFromCoordinates(coords.latitude, coords.longitude).catch(() => null);
     const locationLabelForSave =
       resolvedFromFinalCoords ||
       resolvedLocationName ||
-      `${coords.latitude.toFixed(4)}, ${coords.longitude.toFixed(4)}`;
+      lastKnownLocationCache ||
+      locationInputEl.placeholder ||
+      FALLBACK_LOCATION_LABEL;
 
     renderTimes(timings);
     setLocationInput(locationLabelForSave);
 
-    await saveDefaultSource({ type: 'coords' });
+    await saveDefaultSource({
+      type: 'coords',
+      location: locationLabelForSave,
+      coords,
+      timezone: prayerData.timezone
+    });
     await announceLoaded(timings, locationLabelForSave, {
       coords,
       location: locationLabelForSave,
@@ -914,6 +1126,7 @@ locationInputEl.addEventListener('focus', () => {
 });
 
 openSettingsEl.addEventListener('click', () => {
+  setSettingsTab('notification');
   setPage('settings');
 });
 
@@ -921,24 +1134,122 @@ backDashboardEl.addEventListener('click', () => {
   setPage('dashboard');
 });
 
-timeFormatToggleEl.addEventListener('change', () => {
-  setTimeFormat(timeFormatToggleEl.checked ? '24h' : '12h');
-});
+if (timeFormat12El) {
+  timeFormat12El.addEventListener('click', () => {
+    setTimeFormat('12h');
+  });
+}
 
-soundSelectEl.addEventListener('change', () => {
-  setNotificationSound(soundSelectEl.value);
-});
+if (timeFormat24El) {
+  timeFormat24El.addEventListener('click', () => {
+    setTimeFormat('24h');
+  });
+}
 
-previewSelectedSoundEl.addEventListener('click', () => {
-  previewNotificationSound(soundSelectEl.value);
-});
+if (alertMinNoneEl) {
+  alertMinNoneEl.addEventListener('click', () => {
+    if (alertMinNoneEl.disabled) return;
+    setAlertBeforeMinutes(0);
+  });
+}
+
+if (alertMin5El) {
+  alertMin5El.addEventListener('click', () => {
+    if (alertMin5El.disabled) return;
+    setAlertBeforeMinutes(5);
+  });
+}
+
+if (alertMin10El) {
+  alertMin10El.addEventListener('click', () => {
+    if (alertMin10El.disabled) return;
+    setAlertBeforeMinutes(10);
+  });
+}
+
+if (alertMin15El) {
+  alertMin15El.addEventListener('click', () => {
+    if (alertMin15El.disabled) return;
+    setAlertBeforeMinutes(15);
+  });
+}
+
+if (dndToggleEl) {
+  dndToggleEl.addEventListener('click', async () => {
+    const settings = await getSettings();
+    await setDoNotDisturb(settings.notifications !== false);
+  });
+}
+
+if (overlayToggleEl) {
+  overlayToggleEl.addEventListener('click', async () => {
+    if (overlayToggleEl.disabled) return;
+    const settings = await getSettings();
+    await setOverlayEnabled(!settings.overlayEnabled);
+  });
+}
+
+if (fridayModeToggleEl) {
+  fridayModeToggleEl.addEventListener('click', async () => {
+    if (fridayModeToggleEl.disabled) return;
+    const settings = await getSettings();
+    await setFridayModeEnabled(!settings.fridayModeEnabled);
+  });
+}
+
+if (testPrePrayerToastEl) {
+  testPrePrayerToastEl.addEventListener('click', () => {
+    if (testPrePrayerToastEl.disabled) return;
+    chrome.runtime.sendMessage({ type: 'TEST_PRE_PRAYER_TOAST' });
+  });
+}
+
+if (testPrayerOverlayEl) {
+  testPrayerOverlayEl.addEventListener('click', () => {
+    if (testPrayerOverlayEl.disabled) return;
+    chrome.runtime.sendMessage({ type: 'TEST_PRAYER_OVERLAY' });
+  });
+}
+
+if (soundSelectEl) {
+  soundSelectEl.addEventListener('change', () => {
+    if (soundSelectEl.disabled) return;
+    setNotificationSound(soundSelectEl.value);
+  });
+}
+
+if (previewSelectedSoundEl) {
+  previewSelectedSoundEl.addEventListener('click', () => {
+    if (previewSelectedSoundEl.disabled) return;
+    previewNotificationSound(soundSelectEl?.value || 'sound1');
+  });
+}
+
+if (settingsTabLocationEl) {
+  settingsTabLocationEl.addEventListener('click', () => setSettingsTab('location'));
+}
+
+if (settingsTabNotificationEl) {
+  settingsTabNotificationEl.addEventListener('click', () => setSettingsTab('notification'));
+}
+
+if (settingsTabFormatsEl) {
+  settingsTabFormatsEl.addEventListener('click', () => setSettingsTab('formats'));
+}
 
 async function init() {
   setCurrentLocationButtonLabel(DEFAULT_CURRENT_LOCATION_LABEL);
   setPage('dashboard');
+  setSettingsTab('notification');
   initMap();
   startDashboardClock();
   await loadSavedPopupData();
+  const settings = await getSettings();
+  applyAlertBeforeSelection(settings.alertBeforeMinutes);
+  applyDndSelection(settings.notifications === false);
+  applyNotificationControlsState(settings.notifications === false);
+  applyOverlaySelection(settings.overlayEnabled !== false);
+  applyFridayModeSelection(settings.fridayModeEnabled !== false);
   await autoLoadDefaultLocation();
 }
 

@@ -1,0 +1,121 @@
+@font-face {
+  font-family: "Iowan Old Style";
+  src: url("../../assets/fonts/IowanOldStyle-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+}
+
+.toast-shell {
+  padding: 12px;
+}
+
+.toast-card {
+  border: 1px solid #d9d9d9;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+  padding: 21px;
+}
+
+.toast-head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.toast-icon-wrap {
+  width: 41.5px;
+  height: 41.5px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #83d4ab 49.038%, #196255 100%);
+  display: grid;
+  place-items: center;
+}
+
+.toast-icon {
+  width: 22px;
+  height: 22px;
+  background-color: #fff;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+}
+
+.toast-icon-fajr {
+  -webkit-mask-image: url("../../assets/icons/sunrise_fajr.svg");
+  mask-image: url("../../assets/icons/sunrise_fajr.svg");
+}
+
+.toast-icon-dhuhr {
+  -webkit-mask-image: url("../../assets/icons/sun_dhuhr.svg");
+  mask-image: url("../../assets/icons/sun_dhuhr.svg");
+}
+
+.toast-icon-asr {
+  -webkit-mask-image: url("../../assets/icons/sun dim-asr.svg");
+  mask-image: url("../../assets/icons/sun dim-asr.svg");
+}
+
+.toast-icon-maghrib {
+  -webkit-mask-image: url("../../assets/icons/sunset_maghrib.svg");
+  mask-image: url("../../assets/icons/sunset_maghrib.svg");
+}
+
+.toast-icon-isha {
+  -webkit-mask-image: url("../../assets/icons/moon_isha.svg");
+  mask-image: url("../../assets/icons/moon_isha.svg");
+}
+
+.toast-copy {
+  min-width: 0;
+}
+
+.toast-title {
+  margin: 0 0 4px;
+  font-family: "Iowan Old Style", serif;
+  font-size: 24px;
+  line-height: 1.05;
+  color: #196255;
+}
+
+.toast-sub {
+  margin: 0;
+  font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+  font-size: 12px;
+  color: #4a5565;
+}
+
+.toast-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.toast-btn {
+  height: 34px;
+  flex: 1;
+  border: 0;
+  border-radius: 10px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.toast-btn.ghost {
+  background: #f2f2f2;
+  color: #4a5565;
+}
+
+.toast-btn.solid {
+  background: #9ef4cb;
+  color: #007a55;
+}

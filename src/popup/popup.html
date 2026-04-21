@@ -9,46 +9,60 @@
   </head>
   <body>
     <main class="app">
-      <header id="main-topbar" class="topbar">
-        <div class="topbar-spacer" aria-hidden="true"></div>
-        <h1>Rihla</h1>
-        <button id="open-settings" type="button" class="icon-btn" aria-label="Open settings">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
-            <path fill-rule="evenodd" d="M6.455 1.45A.5.5 0 0 1 6.952 1h2.096a.5.5 0 0 1 .497.45l.186 1.858a4.996 4.996 0 0 1 1.466.848l1.703-.769a.5.5 0 0 1 .639.206l1.047 1.814a.5.5 0 0 1-.14.656l-1.517 1.09a5.026 5.026 0 0 1 0 1.694l1.516 1.09a.5.5 0 0 1 .141.656l-1.047 1.814a.5.5 0 0 1-.639.206l-1.703-.768c-.433.36-.928.649-1.466.847l-.186 1.858a.5.5 0 0 1-.497.45H6.952a.5.5 0 0 1-.497-.45l-.186-1.858a4.993 4.993 0 0 1-1.466-.848l-1.703.769a.5.5 0 0 1-.639-.206l-1.047-1.814a.5.5 0 0 1 .14-.656l1.517-1.09a5.033 5.033 0 0 1 0-1.694l-1.516-1.09a.5.5 0 0 1-.141-.656L2.46 3.593a.5.5 0 0 1 .639-.206l1.703.769c.433-.36.928-.65 1.466-.848l.186-1.858Zm-.177 7.567-.022-.037a2 2 0 0 1 3.466-1.997l.022.037a2 2 0 0 1-3.466 1.997Z" clip-rule="evenodd" />
-          </svg>
-        </button>
-      </header>
-
       <section id="dashboard-page" class="page">
-        <section class="dashboard-dates">
-          <p id="gregorian-datetime" class="date-line">--</p>
-          <p id="hijri-date" class="date-line date-hijri">--</p>
-        </section>
-        <section class="prayer-strip" aria-live="polite">
+        <header id="main-topbar" class="topbar">
+          <div class="header-copy">
+            <p id="hijri-date" class="date-line date-hijri">--</p>
+            <p id="gregorian-datetime" class="date-line">--</p>
+            <p id="dashboard-location" class="location-line" hidden>--</p>
+          </div>
+          <button id="open-settings" type="button" class="icon-btn" aria-label="Open settings">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
+              <path fill-rule="evenodd" d="M6.455 1.45A.5.5 0 0 1 6.952 1h2.096a.5.5 0 0 1 .497.45l.186 1.858a4.996 4.996 0 0 1 1.466.848l1.703-.769a.5.5 0 0 1 .639.206l1.047 1.814a.5.5 0 0 1-.14.656l-1.517 1.09a5.026 5.026 0 0 1 0 1.694l1.516 1.09a.5.5 0 0 1 .141.656l-1.047 1.814a.5.5 0 0 1-.639.206l-1.703-.768c-.433.36-.928.649-1.466.847l-.186 1.858a.5.5 0 0 1-.497.45H6.952a.5.5 0 0 1-.497-.45l-.186-1.858a4.993 4.993 0 0 1-1.466-.848l-1.703.769a.5.5 0 0 1-.639-.206l-1.047-1.814a.5.5 0 0 1 .14-.656l1.517-1.09a5.033 5.033 0 0 1 0-1.694l-1.516-1.09a.5.5 0 0 1-.141-.656L2.46 3.593a.5.5 0 0 1 .639-.206l1.703.769c.433-.36.928-.65 1.466-.848l.186-1.858Zm-.177 7.567-.022-.037a2 2 0 0 1 3.466-1.997l.022.037a2 2 0 0 1-3.466 1.997Z" clip-rule="evenodd" />
+            </svg>
+          </button>
+        </header>
+
+        <section class="prayer-list" aria-live="polite">
           <article class="prayer-item" data-prayer-item="Fajr">
-            <p class="prayer-name">Fajr</p>
-            <span class="prayer-dot" data-prayer-dot="Fajr" aria-hidden="true"></span>
+            <div class="prayer-left">
+              <span class="prayer-icon prayer-icon-fajr" aria-hidden="true"></span>
+              <p class="prayer-name">Fajr</p>
+            </div>
             <p class="prayer-time" data-prayer-time="Fajr">--:--</p>
+            <p class="prayer-countdown" data-prayer-countdown="Fajr" hidden>--</p>
           </article>
           <article class="prayer-item" data-prayer-item="Dhuhr">
-            <p class="prayer-name">Dhuhr</p>
-            <span class="prayer-dot" data-prayer-dot="Dhuhr" aria-hidden="true"></span>
+            <div class="prayer-left">
+              <span class="prayer-icon prayer-icon-dhuhr" aria-hidden="true"></span>
+              <p class="prayer-name">Dhuhr</p>
+            </div>
             <p class="prayer-time" data-prayer-time="Dhuhr">--:--</p>
+            <p class="prayer-countdown" data-prayer-countdown="Dhuhr" hidden>--</p>
           </article>
           <article class="prayer-item" data-prayer-item="Asr">
-            <p class="prayer-name">Asr</p>
-            <span class="prayer-dot" data-prayer-dot="Asr" aria-hidden="true"></span>
+            <div class="prayer-left">
+              <span class="prayer-icon prayer-icon-asr" aria-hidden="true"></span>
+              <p class="prayer-name">Asr</p>
+            </div>
             <p class="prayer-time" data-prayer-time="Asr">--:--</p>
+            <p class="prayer-countdown" data-prayer-countdown="Asr" hidden>--</p>
           </article>
           <article class="prayer-item" data-prayer-item="Maghrib">
-            <p class="prayer-name">Maghrib</p>
-            <span class="prayer-dot" data-prayer-dot="Maghrib" aria-hidden="true"></span>
+            <div class="prayer-left">
+              <span class="prayer-icon prayer-icon-maghrib" aria-hidden="true"></span>
+              <p class="prayer-name">Maghrib</p>
+            </div>
             <p class="prayer-time" data-prayer-time="Maghrib">--:--</p>
+            <p class="prayer-countdown" data-prayer-countdown="Maghrib" hidden>--</p>
           </article>
           <article class="prayer-item" data-prayer-item="Isha">
-            <p class="prayer-name">Isha</p>
-            <span class="prayer-dot" data-prayer-dot="Isha" aria-hidden="true"></span>
+            <div class="prayer-left">
+              <span class="prayer-icon prayer-icon-isha" aria-hidden="true"></span>
+              <p class="prayer-name">Isha</p>
+            </div>
             <p class="prayer-time" data-prayer-time="Isha">--:--</p>
+            <p class="prayer-countdown" data-prayer-countdown="Isha" hidden>--</p>
           </article>
         </section>
         <section class="quran-quote" aria-live="polite">
@@ -68,47 +82,99 @@
           </button>
           <h2>Settings</h2>
         </header>
-        <section class="manual-location">
-          <div id="location-map" class="location-map" aria-label="Location map"></div>
-          <label for="location">Location</label>
-          <input
-            id="location"
-            type="text"
-            placeholder="Kuala Lumpur, Malaysia"
-            autocomplete="street-address"
-          />
-          <ul id="location-suggestions" class="suggestions" hidden></ul>
-          <button id="load-prayer-times" type="button">Use Current Location</button>
+        <section class="settings-body">
+          <div class="settings-tabs" role="tablist" aria-label="Settings tabs">
+            <button id="settings-tab-notification" class="settings-tab is-active" type="button" role="tab" aria-selected="true">Notification</button>
+            <button id="settings-tab-location" class="settings-tab" type="button" role="tab" aria-selected="false">Location</button>
+            <button id="settings-tab-formats" class="settings-tab" type="button" role="tab" aria-selected="false">Formats</button>
+          </div>
 
-          <hr class="divider" />
-          <h2>Alert Sound</h2>
-          <div class="sound-format">
-            <label for="notification-sound-select">Notification Sound</label>
-            <div class="sound-option-row">
+          <div id="settings-panel-notification" class="settings-panel">
+            <section class="settings-block settings-block-split dnd-block">
+              <div>
+                <p class="settings-label">Do Not Disturb</p>
+                <p class="settings-sub">Mute all reminders and notifications</p>
+              </div>
+              <button id="dnd-toggle" class="dnd-toggle" type="button" aria-label="Toggle do not disturb">
+                <span class="dnd-knob"></span>
+              </button>
+            </section>
+
+            <section class="settings-block settings-block-split">
+              <p class="settings-label">Alert Before Prayer</p>
+              <div class="segmented-row">
+                <button id="alert-min-none" class="chip-btn" type="button">None</button>
+                <button id="alert-min-5" class="chip-btn" type="button">5 min</button>
+                <button id="alert-min-10" class="chip-btn" type="button">10 min</button>
+                <button id="alert-min-15" class="chip-btn" type="button">15 min</button>
+              </div>
+              <button id="test-pre-prayer-toast" type="button" class="secondary-btn">Test Pre-Prayer Toast</button>
+            </section>
+
+            <section class="settings-block settings-block-split dnd-block">
+              <div>
+                <p class="settings-label">Prayer Overlay</p>
+                <p class="settings-sub">Open overlay tab when prayer starts</p>
+              </div>
+              <button id="overlay-toggle" class="dnd-toggle" type="button" aria-label="Toggle prayer overlay">
+                <span class="dnd-knob"></span>
+              </button>
+            </section>
+
+            <section class="settings-block settings-block-split dnd-block">
+              <div>
+                <p class="settings-label">Friday Mode</p>
+                <p class="settings-sub">Enable Jumu’ah reminder on Fridays</p>
+              </div>
+              <button id="friday-mode-toggle" class="dnd-toggle" type="button" aria-label="Toggle Friday mode">
+                <span class="dnd-knob"></span>
+              </button>
+            </section>
+
+            <section class="settings-block settings-block-split">
+              <button id="test-prayer-overlay" type="button" class="secondary-btn">Test Prayer Overlay</button>
+            </section>
+
+            <section class="settings-block">
+              <p class="settings-label">Alert Sound</p>
+              <div class="sound-option-row">
               <select id="notification-sound-select" class="sound-select">
+                <option value="none">None</option>
                 <option value="sound1">Notification Sound 1</option>
                 <option value="sound2">Notification Sound 2</option>
               </select>
-              <button id="preview-selected-sound" type="button" class="preview-btn" aria-label="Play notification sound">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
-                  <path d="M3 3.732a1.5 1.5 0 0 1 2.305-1.265l6.706 4.267a1.5 1.5 0 0 1 0 2.531l-6.706 4.268A1.5 1.5 0 0 1 3 12.267V3.732Z" />
-                </svg>
-              </button>
-            </div>
+                <button id="preview-selected-sound" type="button" class="preview-btn" aria-label="Play notification sound">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
+                    <path d="M3 3.732a1.5 1.5 0 0 1 2.305-1.265l6.706 4.267a1.5 1.5 0 0 1 0 2.531l-6.706 4.268A1.5 1.5 0 0 1 3 12.267V3.732Z" />
+                  </svg>
+                </button>
+              </div>
+            </section>
           </div>
 
-          <hr class="divider" />
-          <h2>Time Format</h2>
-          <div class="time-format">
-            <div class="time-toggle-row">
-              <span>12H</span>
-              <label class="switch" aria-label="Toggle 12 hour or 24 hour format">
-                <input id="time-format-toggle" type="checkbox" />
-                <span class="slider"></span>
-              </label>
-              <span>24H</span>
-            </div>
-            <p id="time-format-value" class="helper">Current: 12 Hour</p>
+          <div id="settings-panel-location" class="settings-panel" hidden>
+            <div id="location-map" class="location-map" aria-label="Location map"></div>
+            <section class="settings-block">
+              <label for="location" class="settings-label">Location</label>
+              <input
+                id="location"
+                type="text"
+                placeholder="Kuala Lumpur, Malaysia"
+                autocomplete="street-address"
+              />
+              <ul id="location-suggestions" class="suggestions" hidden></ul>
+              <button id="load-prayer-times" type="button">Use Current Location</button>
+            </section>
+          </div>
+
+          <div id="settings-panel-formats" class="settings-panel" hidden>
+            <section class="settings-block">
+              <p class="settings-label">Time Format</p>
+              <div class="segmented-row time-format-row">
+                <button id="time-format-12hr" class="chip-btn" type="button">12HR</button>
+                <button id="time-format-24hr" class="chip-btn" type="button">24HR</button>
+              </div>
+            </section>
           </div>
         </section>
       </section>
