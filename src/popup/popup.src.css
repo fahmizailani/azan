@@ -1,0 +1,255 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Athelas Arabic";
+  src: url("../../assets/fonts/AthelasArabic-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Iowan Old Style";
+  src: url("../../assets/fonts/IowanOldStyle-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Iowan Old Style";
+  src: url("../../assets/fonts/IowanOldStyle-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@layer base {
+  :root {
+    color-scheme: light;
+    font-family: "Iowan Old Style", serif;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    @apply m-0 min-w-[320px] bg-slate-100 text-slate-900;
+    font-family: "Iowan Old Style", serif;
+  }
+}
+
+@layer components {
+  .app {
+    @apply p-2.5;
+  }
+
+  .topbar {
+    @apply mb-2 grid grid-cols-[34px_1fr_34px] items-center gap-2;
+  }
+
+  .topbar-spacer {
+    @apply h-[34px] w-[34px];
+  }
+
+  .icon-btn {
+    @apply inline-flex h-[34px] w-[34px] cursor-pointer items-center justify-center rounded-[10px] border border-slate-300 bg-white p-0 text-base;
+  }
+
+  .page {
+    @apply block;
+  }
+
+  .page[hidden] {
+    @apply hidden;
+  }
+
+  h1 {
+    @apply m-0 mb-2 mr-0 text-center text-[22px];
+  }
+
+  .topbar h1 {
+    @apply mb-0;
+  }
+
+  #refresh-prayer-times,
+  #load-prayer-times {
+    @apply w-full cursor-pointer rounded-lg border-0 bg-teal-600 px-2 py-2.5 text-white;
+  }
+
+  .dashboard-dates {
+    @apply mb-2;
+  }
+
+  .date-line {
+    @apply m-0 text-xs text-slate-700;
+  }
+
+  .date-hijri {
+    @apply mt-0.5 text-slate-600;
+  }
+
+  .prayer-strip {
+    @apply mt-2 grid grid-cols-5 gap-1 rounded-xl bg-cyan-950 px-1.5 py-2.5;
+  }
+
+  .prayer-item {
+    @apply min-w-0 rounded-[10px] py-0.5 text-center;
+  }
+
+  .prayer-item.is-active {
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .prayer-name {
+    @apply m-0 text-xs text-slate-200;
+  }
+
+  .prayer-time {
+    @apply mt-1.5 whitespace-nowrap text-[13px] font-semibold text-slate-100;
+  }
+
+  .prayer-dot {
+    @apply mt-1.5 inline-block h-[7px] w-[7px] rounded-full bg-slate-400;
+  }
+
+  .prayer-dot.is-active {
+    @apply bg-amber-300;
+    box-shadow: 0 0 0 2px rgba(244, 201, 93, 0.28);
+  }
+
+  .quran-quote {
+    @apply mt-3 rounded-[10px] border border-[#e3dcdc] bg-[#f7f2f1] p-4 text-center;
+  }
+
+  .quran-arabic {
+    @apply m-0 text-center text-2xl leading-[1.45] text-slate-900;
+    font-family: "Athelas Arabic", serif;
+  }
+
+  .quran-pronunciation {
+    @apply mt-1 text-center text-[15px] italic leading-[1.4] text-slate-900;
+  }
+
+  .quran-meaning {
+    @apply mt-0.5 text-center text-[15px] leading-[1.2] text-slate-900;
+  }
+
+  .quran-reference {
+    @apply mt-[7px] text-center text-xs text-slate-800;
+  }
+
+  .settings-head {
+    @apply mb-2 flex items-center gap-2;
+  }
+
+  .settings-head h2 {
+    @apply m-0 text-lg;
+  }
+
+  .location-map {
+    @apply mb-2.5 h-[180px] w-full overflow-hidden rounded-[10px] border border-slate-300;
+  }
+
+  .location-map .maplibregl-ctrl-logo,
+  .location-map .maplibregl-ctrl-bottom-right {
+    @apply hidden !important;
+  }
+
+  .manual-location {
+    @apply rounded-[10px] border border-slate-300 bg-white p-3;
+  }
+
+  .manual-location h2 {
+    @apply mb-2 mt-0 text-sm;
+  }
+
+  .manual-location label {
+    @apply mb-1 mt-2 block text-xs text-slate-700;
+  }
+
+  .manual-location input {
+    @apply w-full rounded-lg border border-slate-300 px-2.5 py-2 text-[13px];
+  }
+
+  .suggestions {
+    @apply mt-1.5 max-h-40 list-none overflow-y-auto rounded-lg border border-slate-300 bg-white p-0;
+  }
+
+  .suggestions li + li {
+    @apply border-t border-slate-100;
+  }
+
+  .suggestion-btn {
+    @apply w-full cursor-pointer border-0 bg-transparent px-2.5 py-2 text-left text-[13px] text-slate-800;
+  }
+
+  .suggestion-btn:hover {
+    @apply bg-slate-50;
+  }
+
+  #load-prayer-times {
+    @apply mt-2 bg-cyan-800;
+  }
+
+  .divider {
+    @apply my-2.5 border-0 border-t border-slate-200;
+  }
+
+  .sound-format,
+  .time-format {
+    @apply grid gap-2;
+  }
+
+  .sound-option-row {
+    @apply flex items-center justify-between gap-2.5;
+  }
+
+  .sound-select {
+    @apply min-w-0 h-9 flex-1 rounded-lg border border-slate-300 bg-white px-2.5 text-[13px] text-slate-900;
+  }
+
+  .preview-btn {
+    @apply h-9 cursor-pointer rounded-lg border border-slate-300 bg-white px-2.5 text-xs text-slate-900;
+  }
+
+  .preview-btn:hover {
+    @apply bg-slate-50;
+  }
+
+  .time-toggle-row {
+    @apply flex items-center gap-2.5 text-[13px];
+  }
+
+  .switch {
+    @apply relative inline-block h-[26px] w-[46px];
+  }
+
+  .switch input {
+    @apply h-0 w-0 opacity-0;
+  }
+
+  .slider {
+    @apply absolute inset-0 cursor-pointer rounded-full bg-slate-300 transition-colors;
+  }
+
+  .slider::before {
+    content: "";
+    @apply absolute left-[3px] top-[3px] h-5 w-5 rounded-full bg-white transition-transform;
+  }
+
+  .switch input:checked + .slider {
+    @apply bg-teal-600;
+  }
+
+  .switch input:checked + .slider::before {
+    transform: translateX(20px);
+  }
+
+  .helper {
+    @apply mt-2 text-xs text-slate-500;
+  }
+}

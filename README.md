@@ -1,4 +1,4 @@
-# Azan Chrome Extension
+# Rihla Chrome Extension
 
 A base Chrome extension scaffold for fetching and displaying prayer times.
 

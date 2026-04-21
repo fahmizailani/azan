@@ -1,10 +1,10 @@
 {
   "manifest_version": 3,
-  "name": "Azan",
-  "description": "Azan prayer time helper for Chrome.",
+  "name": "Rihla",
+  "description": "Rihla prayer time helper for Chrome.",
   "version": "0.1.0",
   "action": {
-    "default_title": "Azan",
+    "default_title": "Rihla",
     "default_popup": "src/popup/popup.html"
   },
   "background": {
@@ -15,9 +15,13 @@
   "permissions": [
     "storage",
     "alarms",
-    "notifications"
+    "notifications",
+    "geolocation",
+    "offscreen"
   ],
   "host_permissions": [
-    "https://api.aladhan.com/*"
+    "https://api.aladhan.com/*",
+    "https://geocoding-api.open-meteo.com/*",
+    "https://tiles.openfreemap.org/*"
   ]
 }

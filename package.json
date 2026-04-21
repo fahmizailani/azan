@@ -1,0 +1,25 @@
+{
+  "name": "azan",
+  "version": "1.0.0",
+  "description": "A base Chrome extension scaffold for fetching and displaying prayer times.",
+  "main": "index.js",
+  "scripts": {
+    "build:popup-css": "tailwindcss -i ./src/popup/popup.src.css -o ./src/popup/popup.css --minify",
+    "watch:popup-css": "tailwindcss -i ./src/popup/popup.src.css -o ./src/popup/popup.css --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fahmizailani/azan.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fahmizailani/azan/issues"
+  },
+  "homepage": "https://github.com/fahmizailani/azan#readme",
+  "devDependencies": {
+    "tailwindcss": "^3.4.14"
+  }
+}
